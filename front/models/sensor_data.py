@@ -13,13 +13,13 @@ import re
 import time
 
 
-class SensorDatum(Base):
-    __tablename__ = 'sensor_data_1'
+class SensorDatum():
+    #__tablename__ = 'sensor_data_1'
 
-    data_id = Column(String(255), primary_key=True)
+    #data_id = Column(String(255), primary_key=True)
     # sid = Column(Integer, nullable=False)
-    datetime = Column(DateTime, nullable=False, server_default=FetchedValue())
-    value = Column(String(255))
+    #datetime = Column(DateTime, nullable=False, server_default=FetchedValue())
+    #value = Column(String(255))
     # type = Column(ForeignKey('sensor_type.id'), nullable=False, index=True)
 
     # sensor_type = relationship('SensorType', primaryjoin='SensorDatum.type == SensorType.id', backref='sensor_data')
@@ -28,40 +28,69 @@ class SensorDatum(Base):
     def sensor_args_check(args):
         # 检查start字段的格式
         start = args["start"]
-        reg_date = re.compile(date_reg)
-        result = re.match(reg_date, start)
+        result = re.match(r"^[1-9]\d*$", start)
         if not result:
             return False, "start值格式错误"
 
         # 检查end字段的格式
         end = args["end"]
-        result = re.match(reg_date, end)
+        result = re.match(r"^[1-9]\d*$", end)
         if not result:
             return False, "end值格式错误"
 
         # 检查interval字段的值 格式正整数
-        if not re.match(r"^[1-9]\d*$", str(args["interval"])):
-            return False, "start值格式错误"
+        if "interval" in args.keys() and args["interval"] not in ["h", "d", "m", "y"]:
+            return False, "interval值不在可选列表中"
 
         # args["address"]
         # 检查type的字段的值是否存在在sensor_type表中
         return True, ""
 
+
     @staticmethod
-    def get_data(args):
-        # type_exist = session.query(SensorType.id).filter_by(id=args["type"]).first()
-        # if type_exist:
-        #     type_id = type_exist[0]
-        # else:
-        #     return False, "无此传感器类型", []
+    def get_avg_data(args):
         sensor_exist = session.query(Sensor.sid).filter_by(sid=args["sensor_id"]).first()
         if not sensor_exist:
             return False, "", []
-        sql_2 = """
-            SELECT `value`, `datetime`
+        table_name = 'sensor_data_%s_avg' % str(args["sensor_id"])
+        start = int(args["start"] + "0000")
+        end = int(args["end"] + "0000")
+        interval = ["h", "d", "m", "y"].index(args["interval"]) + 1
+        sql_0 = """
+            (SELECT `value`, `time`
             FROM {0}
-            WHERE datetime BETWEEN '{1}' AND '{2}'
-            ORDER BY `datetime` DESC;
-               """.format('sensor_data_' + str(args["sensor_id"]), args["start"], args["end"])
+            WHERE time <= {1}
+            ORDER BY `time` DESC
+            LIMIT 1)
+        UNION ALL
+            (SELECT `value`, `time`
+            FROM {0}
+            WHERE (time BETWEEN {1} AND {2}) AND accuracy={3})
+        UNION ALL
+            (SELECT `value`, `time`
+            FROM {0}
+            WHERE time >= {2}
+            ORDER BY `time`
+            LIMIT 1);
+        """.format(table_name, start, end, interval)
+        all_data = session.execute(sql_0).fetchall()
+        return True, "数据查询成功", [{"value": i.value, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.time/10000))} for i in all_data]
+
+
+    @staticmethod
+    def get_detail_data(args):
+        sensor_exist = session.query(Sensor.sid).filter_by(sid=args["sensor_id"]).first()
+        if not sensor_exist:
+            return False, "无此传感器", []
+        table_name = 'sensor_data_%s_avg' % str(args["sensor_id"])
+        start = int(args["start"] + "0000")
+        end = int(args["end"] + "0000")
+        sql_2 = """
+            SELECT `value`, `time`
+            FROM {0}
+            WHERE time BETWEEN {1} AND {2}
+            ORDER BY `time` DESC;
+        """.format(table_name, start, end)
         all_data = session.execute(sql_2).fetchall()
-        return True, "数据查询成功", [{"value": i.value, "datetime": i.datetime} for i in all_data]
+        return True, "数据查询成功", [{"value": i.value, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.time/10000))} for i in all_data]
+

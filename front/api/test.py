@@ -1,24 +1,30 @@
+from flask import Flask
+from flask_restplus import Api, Resource, fields
 
-from front.logger import app
-from copy import deepcopy
-from front.libs.dst import my_json
-from flask import request, g
-from front.libs.auth import verify_account
-from front.models.sensor_data import SensorDatum
-from front.libs.default_data import address as default_address
-from datetime import datetime
+app = Flask(__name__)
+api = Api(app)
 
+a_language = api.model('language', {
+    'language': fields.String('TheLanguage'),
+    'id': fields.Integer('ID')
+})
 
-@app.route('/sponge/test/create_data', methods=["GET"])
-def create_data():
-    """
-    随机数据生成接口
-    :return: dst.my_json字典
-    """
-    args = dict()
-    args["start"] = request.args.get("start", "2019-06-22")  # 开始时间 默认是2019-06-22
-    args["end"] = request.args.get("end", str(datetime.now().date()))  # 结束时间 默认是今天
-    args["interval"] = request.args.get("interval", 60)  # 时间间隔 默认60s
-    args["address"] = request.args.get("address", default_address)  # 地点
-    args["type"] = request.args.get("type", None)  # 数据类型
+languages = list()
+python = {'language': 'python', 'id': 1}
+languages.append(python)
 
+@api.route('/language')
+class language(Resource):
+    @api.marshal_with(a_language, envelope='data') # envelope在这里
+    def get(self):
+        return languages
+
+    @api.expect(a_language)
+    def post(self):
+        new_language = api.payload
+        new_language['id'] = len(languages) + 1
+        languages.append(new_language)
+        return {'result': 'language added'}, 201
+
+if __name__ == '__main__':
+    app.run(debug=True)

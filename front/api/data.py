@@ -24,3 +24,14 @@ def data():
             "username": username
         }
     return result
+
+
+@app.route('/sponge/dashboard', methods=["GET"])
+def dashboard():
+    """
+    仪表盘数据获取接口
+    :return: dst.my_json字典
+    """
+    result = deepcopy(my_json)  # 存储给用户的提示信息msg以及给前端的状态码
+    # 获取latest表中的当所有当前数据data = {"data": [{""}]}
+    return result
