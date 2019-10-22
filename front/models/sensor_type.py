@@ -10,4 +10,5 @@ class SensorType(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    notes = Column(String(50), nullable=False)
+    en_name = Column(String(50), nullable=False)
+    # notes = Column(String(50), nullable=False)

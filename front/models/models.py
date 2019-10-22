@@ -13,15 +13,11 @@ metadata = Base.metadata
 
 
 class SensorDatum(Base):
-    __tablename__ = 'sensor_data'
+    __tablename__ = 'sensor_data_1'
 
     data_id = Column(String(255), primary_key=True)
-    sid = Column(Integer, nullable=False)
     datetime = Column(DateTime, nullable=False, server_default=FetchedValue())
     value = Column(String(255))
-    type = Column(ForeignKey('sensor_type.id'), nullable=False, index=True)
-
-    sensor_type = relationship('SensorType', primaryjoin='SensorDatum.type == SensorType.id', backref='sensor_data')
 
 
 

@@ -27,5 +27,5 @@ class Sensor(Base):
     def get_all_sensors():
         sensors = session.query(Sensor).outerjoin(Node, Node.nid == Sensor.nid)\
             .outerjoin(SensorType, SensorType.id == Sensor.type).all()
-        return [{"name": s.name, "sid": s.sid,"nid": s.node.nid, "sname": s.node.name, "location": s.node.location,
+        return [{"name": s.name, "sid": s.sid, "nid": s.node.nid, "sname": s.node.name, "location": s.node.location,
                  "status": s.node.status, "type": s.sensor_type.name} for s in sensors]
