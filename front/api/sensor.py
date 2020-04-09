@@ -11,7 +11,7 @@ from front.libs import auth
 
 
 @app.route('/sponge/avg_data/sensor', methods=["GET"])
-# @auth.auth_required
+@auth.auth_required
 def sensor_avg_data():
     """
     传感器平均数据接口
@@ -23,11 +23,10 @@ def sensor_avg_data():
         "start", "1560873600")  # 开始时间 默认是2019-06-19 00:00:00
     args["end"] = request.args.get("end", str(int(time.time())))
     # 结束时间 默认是今天
-    args["interval"] = request.args.get("interval", "h")  # 时间间隔 默认60s
+    args["interval"] = request.args.get("interval", "1")  # 时间间隔 默认60s
     args["address"] = request.args.get("address", default_address)  # 地点
     args["sensor_id"] = request.args.get("sensor_id", None)  # 数据类型
-    success, result["message"] = SensorDatum.sensor_args_check(
-        args)  # 检查参数值是否合法
+    success, result["message"] = SensorDatum.sensor_args_check(args)  # 检查参数值是否合法
     if not success and args["sensor_id"]:
         result["status"] = 0
         return result
@@ -37,7 +36,7 @@ def sensor_avg_data():
 
 
 @app.route('/sponge/detail_data/sensor', methods=["GET"])
-# @auth.auth_required
+@auth.auth_required
 def sensor_detail_data():
     """
     传感器详细数据接口
@@ -61,19 +60,20 @@ def sensor_detail_data():
 
 
 @app.route('/sponge/sensors/list', methods=["GET"])
-# @auth.auth_required
+@auth.auth_required
 def sensors_list():
     """
     传感器列表数据接口
     return: dst.my_json字典
     """
     result = deepcopy(my_json)  # 存储给用户的提示信息msg以及给前端的状态码
-    result["data"] = Sensor.get_all_sensors()
+    nid = request.args.get("nid", None)
+    result["data"] = Sensor.get_all_sensors(nid)
     return result
 
 
 @app.route('/sponge/sensors/vary_modify', methods=["GET"])
-# @auth.auth_required
+@auth.auth_required
 def sensors_vary_modify():
     """
     传感器阈值修改接口

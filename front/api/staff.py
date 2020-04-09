@@ -3,14 +3,12 @@ from copy import deepcopy
 from front.libs.dst import my_json
 from flask import request, g
 from front.libs.auth import verify_account
-from front.libs import auth
 
 
-@app.route('/sponge/data', methods=["GET"])
-@auth.auth_required
-def data():
+@app.route('/iims/staff/login', methods=["POST"])
+def login():
     """
-    数据获取接口
+    用户登录接口
     :return: dst.my_json字典
     """
     result = deepcopy(my_json)  # 存储给用户的提示信息msg以及给前端的状态码
@@ -28,13 +26,10 @@ def data():
     return result
 
 
-@app.route('/sponge/dashboard', methods=["GET"])
-@auth.auth_required
-def dashboard():
+@app.route('/iims/staff/logout', methods=["GET"])
+def logout():
     """
-    仪表盘数据获取接口
-    :return: dst.my_json字典
+    用户登出接口
     """
-    result = deepcopy(my_json)  # 存储给用户的提示信息msg以及给前端的状态码
-    # 获取latest表中的当所有当前数据data = {"data": [{""}]}
-    return result
+    from front.libs.auth import clear_token
+    clear_token(g.token)

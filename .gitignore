@@ -1,5 +1,7 @@
 .idea/
 env/
+.vscode/
 /.idea
 env
 logs
+config.py

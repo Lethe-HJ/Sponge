@@ -54,22 +54,22 @@ app.logger.addHandler(error_handler)
 app.logger.setLevel(ERROR_LOG_LEVEL)
 
 
-@app.errorhandler(400)
-def errorhandler_400(error):
-    app.logger.info(error.description.encode("utf-8"))
-    return error.description, status.HTTP_400_BAD_REQUEST
+# @app.errorhandler(400)
+# def errorhandler_400(error):
+#     app.logger.info(error.description.encode("utf-8"))
+#     return error.description, status.HTTP_400_BAD_REQUEST
 
 
-@app.errorhandler(404)
-def errorhandler_404(error):
-    app.logger.info(error.description.encode("utf-8"))
-    return error.description, status.HTTP_404_NOT_FOUND
+# @app.errorhandler(404)
+# def errorhandler_404(error):
+#     app.logger.info(error.description.encode("utf-8"))
+#     return error.description, status.HTTP_404_NOT_FOUND
 
 
-@app.errorhandler(Exception)
-def framework_error(error):
-    app.logger.error(str(error), exc_info=True)
-    return str(error), status.HTTP_500_INTERNAL_SERVER_ERROR
+# @app.errorhandler(Exception)
+# def framework_error(error):
+#     app.logger.error(str(error), exc_info=True)
+#     return str(error), status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
 # def create_logger():

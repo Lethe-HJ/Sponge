@@ -25,6 +25,14 @@ class Node(Base):
         nodes = session.query(Node).all()
         return True, "数据获取成功", [{"nid": n.nid, "name": n.address,
          "location": n.location, "status": n.status} for n in nodes]
+    
+    @staticmethod
+    def get_the_node(nid):
+        node = session.query(Node).filter_by(nid=nid).first()
+        if not node:
+            return False, "无此基站"
+        return True, "数据获取成功", {"nid": node.nid, "name": node.address,
+         "location": node.location, "status": node.status}
 
     @staticmethod
     def edit_node(nid, args):
@@ -38,24 +46,15 @@ class Node(Base):
             session.rollback()
             return False, "基站{0}数据修改失败, 错误原因{1}".format(nid, e)
         return True, "基站{0} 数据成功修改为{1}".format(nid, args)
-    
-    
-    @staticmethod
-    def node_eidt_args_check(nid, args):
+
+    def node_eidt_args_check(self, nid, args):
         msg_li = []
 
         # 参数缺失处理
         if not nid:
             msg_li.append("nid")
-        if not args["address"]:
-            msg_li.append("address")
-        if not args["location"]:
-            msg_li.append("location")
-        if not args["status"]:
-            msg_li.append("status")
-        if not args["secret_key"]:
-            msg_li.append("secret_key")
-        if msg_li != []:  
+        msg_li += self.node_args_exit_check(args)
+        if msg_li != []:
             return False, "缺少参数" + ",".join(msg_li)
 
         # 参数值检验
@@ -64,4 +63,36 @@ class Node(Base):
         # address, location, status, secret_key的参数检查,后续再补
         return True, "参数检测成功"
 
-        
+    def node_add_args_check(self, args):
+        # 参数缺失处理
+        msg_li = self.node_args_exit_check(args)
+        if msg_li != []:
+            return False, "缺少参数" + ",".join(msg_li)
+
+        # address, location, status, secret_key的参数检查,后续再补
+        return True, "参数检测成功"
+
+    @staticmethod
+    def add_node(args):
+        node_new = Node(**args)
+        try:
+            session.add(node_new)
+            session.commit()
+        except exc.SQLAlchemyError as e:
+            session.rollback()
+            return False, "数据提交失败，失败原因为{0}".format(e)
+        return True, "数据提交成功，成功新增基站{0}".format(args)
+
+    def node_args_exit_check(self, args):
+        msg_li = []
+        # 参数缺失处理
+        if not args["address"]:
+            msg_li.append("address")
+        if not args["location"]:
+            msg_li.append("location")
+        if not args["status"]:
+            msg_li.append("status")
+        if not args["secret_key"]:
+            msg_li.append("secret_key")
+        # address, location, status, secret_key的参数检查,后续再补
+        return msg_li

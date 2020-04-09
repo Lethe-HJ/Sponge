@@ -26,7 +26,7 @@ class Sensor(Base):
     sensor_type = relationship('SensorType', primaryjoin='Sensor.type == SensorType.id', backref='sensors')
 
     @staticmethod
-    def get_all_sensors():
+    def get_all_sensors(nid):
         sql_1 = """
         SELECT `name`, s.nid AS `nid`, `sid`, `latest_data`, `data_updatetime`, `address`, `location`, `status`, `type_name` FROM `sensors` s
         LEFT JOIN
@@ -34,9 +34,10 @@ class Sensor(Base):
         ON s.nid=n.nid
         LEFT JOIN
         (SELECT `id`, `name` AS `type_name` FROM `sensor_type`) t
-        ON t.id=s.type;
+        ON t.id=s.type
+        WHERE s.nid=:nid;
         """
-        datas = session.execute(sql_1).fetchall()
+        datas = session.execute(sql_1,{"nid": nid}).fetchall()
         return [{"name": data.name, "sid": data.sid, "nid": data.nid, "address": data.address, "location": data.location,
                  "status": data.status, "type": data.type_name, "data": data.latest_data, "update_time": data.data_updatetime} for data in datas]
 

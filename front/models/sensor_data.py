@@ -39,7 +39,7 @@ class SensorDatum():
             return False, "end值格式错误"
 
         # 检查interval字段的值 格式正整数
-        if "interval" in args.keys() and args["interval"] not in ["h", "d", "m", "y"]:
+        if "interval" in args.keys() and args["interval"] not in ["1", "2", "3"]:
             return False, "interval值不在可选列表中"
 
         # args["address"]
@@ -55,7 +55,6 @@ class SensorDatum():
         table_name = 'sensor_data_%s_avg' % str(args["sensor_id"])
         start = int(args["start"] + "0000")
         end = int(args["end"] + "0000")
-        interval = ["h", "d", "m", "y"].index(args["interval"]) + 1
         sql_0 = """
             (SELECT `value`, `time`
             FROM {0}
@@ -72,7 +71,7 @@ class SensorDatum():
             WHERE time >= {2}
             ORDER BY `time`
             LIMIT 1);
-        """.format(table_name, start, end, interval)
+        """.format(table_name, start, end, args["interval"])
         all_data = session.execute(sql_0).fetchall()
         return True, "数据查询成功", [{"value": i.value, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.time/10000))} for i in all_data]
 
