@@ -1,4 +1,4 @@
-﻿from os import environ
+from os import environ
 from front.api import app
 
 if __name__ == '__main__':

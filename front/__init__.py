@@ -34,7 +34,7 @@ import pymysql
 
 # config_file = getExePath()+'config.py'
 # app.config.from_pyfile(config_file)
-config_file = "..\\config.py"
+config_file = "../config.py"
 app.config.from_pyfile(config_file)
 # 加载静态文件路径
 static_folder = app.config['STATIC_FOLDER']

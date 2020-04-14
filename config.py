@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 import os  
 import time
 import pymysql
@@ -13,9 +13,8 @@ from urllib.parse import quote as urlquote
 # 参考: https://blog.csdn.net/ennismar/article/details/59518653
 
 
-# SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hujin666..@127.0.0.1:3306/sponge?charset=utf8'
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:lethe666@47.106.83.135:3306/sponge?charset=utf8'
-PORT = 5001
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hujin666..@127.0.0.1:3306/sponge?charset=utf8'
+PORT = 8080
 # redis信息
 REDIS_CONF = {
     "host": 'localhost',
@@ -31,7 +30,6 @@ SQLALCHEMY_POOL_RECYCLE = 3600
 SECRET_KEY = 'lazy dog'
 
 # 静态文件目录,文件落地目录
-STATIC_FOLDER = 'C:/www/hujin/xd-iims/static'
 # 缓存类型及默认超时时间
 CACHE_TYPE ='simple'
 CACHE_DEFAULT_TIMEOUT = 60
