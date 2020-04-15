@@ -4,4 +4,4 @@ env/
 /.idea
 env
 logs
-config.py
+**/__pycache__
