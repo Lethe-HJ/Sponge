@@ -14,7 +14,7 @@ importlib.reload(sys)
 def getExePath():
     sap = '/'
     if sys.argv[0].find(sap) == -1:
-        sap = '\\'
+        sap = '/'
     indx = sys.argv[0].rfind(sap)
     path = sys.argv[0][:indx] + sap
     return path
