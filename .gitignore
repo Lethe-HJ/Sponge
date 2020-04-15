@@ -4,4 +4,3 @@ env/
 /.idea
 env
 logs
-config.py

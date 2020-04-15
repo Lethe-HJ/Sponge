@@ -30,7 +30,7 @@ SQLALCHEMY_POOL_RECYCLE = 3600
 SECRET_KEY = 'lazy dog'
 
 # 静态文件目录,文件落地目录
-STATIC_FOLDER = ''
+STATIC_FOLDER = './static'
 # 缓存类型及默认超时时间
 CACHE_TYPE ='simple'
 CACHE_DEFAULT_TIMEOUT = 60

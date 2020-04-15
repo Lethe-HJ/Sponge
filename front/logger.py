@@ -15,22 +15,26 @@ def getExePath():
     sap = '/'
     if sys.argv[0].find(sap) == -1:
         sap = '/'
+    print(sys.argv[0])
     indx = sys.argv[0].rfind(sap)
-    path = sys.argv[0][:indx] + sap
+    print(indx)
+    path = sys.argv[0][:indx+1] + sap
+    print(path)
     return path
 
 
 LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s\r\n'
 
 # 访问日志路径及日志级别
-LOG_PATH = getExePath()+'Logs/info/%s.log' % (time.strftime('%Y%m%d'))
+LOG_PATH = './logs/info/%s.log' % (time.strftime('%Y%m%d'))
 # LOG_PATH = 'Logs/%s.log' %(time.strftime('%Y%m%d'))
 LOG_LEVEL = logging.INFO
 
 logdir, _ = os.path.split(LOG_PATH)
 
 # 错误日志路径及日志级别
-ERROR_LOG_PATH = getExePath()+'Logs/error/%s.log' % (time.strftime('%Y%m%d'))
+#print(getExePath())
+ERROR_LOG_PATH = './logs/error/%s.log' % (time.strftime('%Y%m%d'))
 error_logdir, _ = os.path.split(ERROR_LOG_PATH)
 ERROR_LOG_LEVEL = logging.ERROR
 
