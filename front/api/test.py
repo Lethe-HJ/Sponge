@@ -21,4 +21,5 @@ def create_data():
     args["interval"] = request.args.get("interval", 60)  # 时间间隔 默认60s
     args["address"] = request.args.get("address", default_address)  # 地点
     args["type"] = request.args.get("type", None)  # 数据类型
+    return "hello world"
 
