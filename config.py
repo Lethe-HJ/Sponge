@@ -13,7 +13,7 @@ from urllib.parse import quote as urlquote
 # 参考: https://blog.csdn.net/ennismar/article/details/59518653
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hujin666..@127.0.0.1:3306/sponge?charset=utf8'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://sponge:hujin666..@172.18.0.2:3306/sponge?charset=utf8'
 PORT = 8080
 # redis信息
 REDIS_CONF = {
