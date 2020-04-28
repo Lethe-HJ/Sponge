@@ -8,8 +8,3 @@ if __name__ == '__main__':
     app.debug = True
     gevent_server = pywsgi.WSGIServer(('0.0.0.0', app.config["PORT"]), app)
     gevent_server.serve_forever()
-
-
-    
-
-

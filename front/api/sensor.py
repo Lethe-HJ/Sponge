@@ -67,7 +67,7 @@ def sensors_list():
     return: dst.my_json字典
     """
     result = deepcopy(my_json)  # 存储给用户的提示信息msg以及给前端的状态码
-    nid = request.args.get("nid", None)
+    nid = request.args.get("nid", 1)
     result["data"] = Sensor.get_all_sensors(nid)
     return result
 
