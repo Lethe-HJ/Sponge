@@ -34,7 +34,7 @@ shellescape==3.4.1
 six==1.12.0
 sqlacodegen==2.1.0
 tzlocal==2.0.0
-urllib3==1.25.3
+urllib3==1.25.8
 flask_restful==0.3.7
 flask_restplus==0.13.0
 
