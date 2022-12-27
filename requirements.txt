@@ -29,7 +29,7 @@ pycryptodome==3.8.2
 pymssql==2.1.4
 redis==3.3.8
 requests==2.22.0
-setuptools==40.8.0
+setuptools==65.5.1
 shellescape==3.4.1
 six==1.12.0
 sqlacodegen==2.1.0
